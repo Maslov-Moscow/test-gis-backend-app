@@ -1,0 +1,41 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.*
+!*.example # If you have a .env.example file
+
+# Database files (if using SQLite or similar local databases)
+*.sqlite3
+db.sqlite3
+
+# Logs
+*.log
+
+# Editor/IDE specific files
+.idea/ # For PyCharm/IntelliJ
+.vscode/ # For VS Code
+*.sublime-project
+*.sublime-workspace
+
+# Test reports
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Jupyter Notebook specific files (if used)
+.ipynb_checkpoints/
