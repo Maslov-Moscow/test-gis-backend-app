@@ -41,3 +41,5 @@ build/
 
 # Jupyter Notebook specific files (if used)
 .ipynb_checkpoints/
+
+.ruff_cache
