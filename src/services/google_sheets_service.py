@@ -1,8 +1,10 @@
 import math
-from datetime import datetime
 import os
+from datetime import datetime
+
 import gspread
 from google.oauth2.service_account import Credentials
+
 from src.config import settings
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']

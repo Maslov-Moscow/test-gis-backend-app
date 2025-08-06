@@ -1,4 +1,3 @@
-import asyncio
 import hashlib
 import time
 
@@ -11,6 +10,7 @@ from sqlalchemy import select
 from src.db import AsyncSession
 from src.models import GeoJSONCache
 from src.utils import submit_to_process_executor
+
 
 def make_cache_key(latitude: float, longitude: float, radius: float) -> str:
     """

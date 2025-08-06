@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator
 
+
 class CoordinatesRequest(BaseModel):
     latitude: float
     longitude: float

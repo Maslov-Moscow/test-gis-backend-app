@@ -1,8 +1,8 @@
-from sqlalchemy import Column, String, Float, DateTime
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Float, String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base
-
-from datetime import datetime
 
 Base = declarative_base()
 
