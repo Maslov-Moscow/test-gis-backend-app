@@ -14,6 +14,7 @@ __pycache__/
 .env
 .env.*
 !*.example # If you have a .env.example file
+credentials.json
 
 # Database files (if using SQLite or similar local databases)
 *.sqlite3

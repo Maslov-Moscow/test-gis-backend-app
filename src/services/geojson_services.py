@@ -8,8 +8,9 @@ from shapely.geometry import Point
 from shapely.ops import transform
 from sqlalchemy import select
 
-from .db import AsyncSession
-from .models import GeoJSONCache
+from src.db import AsyncSession
+from src.models import GeoJSONCache
+from src.utils import submit_to_process_executor
 
 def make_cache_key(latitude: float, longitude: float, radius: float) -> str:
     """
@@ -68,16 +69,16 @@ async def create_geojson_polygon(
     lat: float, lon: float, radius_meters: float
 ) -> dict:
     """
-    Асинхронно строит GeoJSON-полигон-круг заданного радиуса вокруг точки.
+    Создаёт GeoJSON-полигон (окружность) через executor.
 
     :param lat: Широта центра (float)
     :param lon: Долгота центра (float)
     :param radius_meters: Радиус круга в метрах (float)
     :return: GeoJSON-полигон (dict)
     """
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(
-        None, compute_geojson_polygon, lat, lon, radius_meters
+    
+    return await submit_to_process_executor(
+        compute_geojson_polygon, lat, lon, radius_meters
     )
 
 
