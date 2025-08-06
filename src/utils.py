@@ -11,10 +11,3 @@ async def submit_to_executor(func, *args, **kwargs):
     """
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(executor, func, *args)
-
-
-def shutdown_executor():
-    """
-    Грейсфулл shutdown.
-    """
-    executor.shutdown(wait=True)

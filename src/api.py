@@ -11,12 +11,20 @@ router = APIRouter()
 async def convert_to_polygon(
     request: CoordinatesRequest, db: AsyncSession = Depends(get_db)
 ):
+    """
+    Преобразует координаты и радиус в GeoJSON-полигон.
+
+    Workflow:
+      1. Проверяет наличие полигона в кэше по координатам и радиусу.
+      2. Если найден — возвращает кэшированный результат.
+      3. Если нет — создает новый полигон, сохраняет его в кэш и возвращает.
+    """
     cached = await get_from_cache(db, request.latitude, request.longitude, request.radius)
     if cached:
         return cached
 
-    geojson_feature = await create_geojson_polygon(
+    geojson = await create_geojson_polygon(
         request.latitude, request.longitude, request.radius
     )
-    await save_to_cache(db, request.latitude, request.longitude, request.radius, geojson_feature)
-    return geojson_feature
+    await save_to_cache(db, request.latitude, request.longitude, request.radius, geojson)
+    return geojson

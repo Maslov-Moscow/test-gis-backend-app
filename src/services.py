@@ -12,12 +12,29 @@ from .db import AsyncSession
 from .models import GeoJSONCache
 
 def make_cache_key(latitude: float, longitude: float, radius: float) -> str:
+    """
+    Генерирует уникальный ключ для кэширования по координатам и радиусу.
+
+    :param latitude: Широта (float)
+    :param longitude: Долгота (float)
+    :param radius: Радиус (float)
+    :return: Хеш-строка (str)
+    """
     key_str = f"{latitude}:{longitude}:{radius}"
     return hashlib.sha256(key_str.encode()).hexdigest()
 
 async def get_from_cache(
     db: AsyncSession, latitude: float, longitude: float, radius: float
 ):
+    """
+    Получает результат из кэша по координатам и радиусу.
+
+    :param db: Сессия БД (AsyncSession)
+    :param latitude: Широта (float)
+    :param longitude: Долгота (float)
+    :param radius: Радиус (float)
+    :return: Результат из кэша (dict) или None
+    """
     key = make_cache_key(latitude, longitude, radius)
     q = await db.execute(select(GeoJSONCache).where(GeoJSONCache.hash == key))
     row = q.scalar_one_or_none()
@@ -26,6 +43,15 @@ async def get_from_cache(
 async def save_to_cache(
     db: AsyncSession, latitude: float, longitude: float, radius: float, result: dict
 ):
+    """
+    Сохраняет результат в кэш по координатам и радиусу.
+
+    :param db: Сессия БД (AsyncSession)
+    :param latitude: Широта (float)
+    :param longitude: Долгота (float)
+    :param radius: Радиус (float)
+    :param result: Сохраняемый результат (dict)
+    """
     key = make_cache_key(latitude, longitude, radius)
     cache_entry = GeoJSONCache(
         hash=key,
@@ -38,12 +64,17 @@ async def save_to_cache(
     await db.commit()
 
 
-
-
-
 async def create_geojson_polygon(
     lat: float, lon: float, radius_meters: float
 ) -> dict:
+    """
+    Асинхронно строит GeoJSON-полигон-круг заданного радиуса вокруг точки.
+
+    :param lat: Широта центра (float)
+    :param lon: Долгота центра (float)
+    :param radius_meters: Радиус круга в метрах (float)
+    :return: GeoJSON-полигон (dict)
+    """
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(
         None, compute_geojson_polygon, lat, lon, radius_meters
@@ -79,5 +110,5 @@ def compute_geojson_polygon(
         geojson_polygon = geojson.Feature(geometry=circle_deg, properties={})
 
         return geojson_polygon
-    except Exception:
-        raise RuntimeError("Ошибка обработки координат")
+    except Exception as e:
+        raise RuntimeError("Ошибка обработки координат") from e
